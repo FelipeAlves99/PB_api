@@ -4,7 +4,7 @@ using PB.Domain.Shared.Entities;
 
 namespace PB.Domain.Entities
 {
-    public class Phone : Entity<Phone>
+    public sealed class Phone : Entity<Phone>
     {
         public Phone(string ddd, string phoneNumber, EPhoneType phoneType, Guid clientId)
         {
@@ -55,6 +55,14 @@ namespace PB.Domain.Entities
             RuleFor(p => p.Ddd)
                 .NotNull().WithMessage("You must inform thee phone region number")
                 .Length(3).WithMessage("The phone region number must be 3 chars long");
+        }
+
+        internal void Update(string ddd, string phoneNumber, EPhoneType phoneType)
+        {
+            Ddd = ddd;
+            PhoneNumber = phoneNumber;
+            PhoneType = phoneType;
+            UpdatedOn = DateTime.Now;
         }
     }
 }

@@ -22,17 +22,10 @@ namespace PB.Domain.Entities
         {
             ValidateFullName();
             ValidateEmail();
-            ValidatePhones();
 
             AddErrors(Validate(this));
 
             return ValidationResult.IsValid;
-        }
-
-        private void ValidatePhones()
-        {
-            RuleForEach(c => c.Phones)
-                .NotEmpty().WithMessage("You must inform at least one valid phone number");
         }
 
         private void ValidateEmail()
@@ -48,6 +41,12 @@ namespace PB.Domain.Entities
                 .NotEmpty().WithMessage("You must inform your full name")
                 .Must(c => c.Split(' ').Length > 1).WithMessage("You must inform at least your first and last name");
 
+        }
+
+        internal void Update(string email)
+        {
+            Email = email;
+            UpdatedOn = DateTime.Now;
         }
     }
 }

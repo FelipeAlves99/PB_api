@@ -13,5 +13,7 @@ namespace PB.Domain.Repositories
         Task<ICollection<Client>> GetAll();
 
         Task<Client> Get(Guid id);
+
+        Task<Client> GetByEmail(string email);
     }
 }

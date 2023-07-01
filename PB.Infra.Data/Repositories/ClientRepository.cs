@@ -52,5 +52,13 @@ namespace PB.Infra.Data.Repositories
                 .ToListAsync();
             return result;
         }
+
+        public async Task<Client> GetByEmail(string email)
+        {
+            return await _client
+                .AsNoTracking()
+                .Include(x => x.Phones)
+                .SingleOrDefaultAsync(c => c.Email == email);
+        }
     }
 }

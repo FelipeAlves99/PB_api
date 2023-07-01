@@ -35,10 +35,11 @@ namespace PB.Infra.Data.Repositories
             return Task.CompletedTask;
         }
 
-        public async Task<ICollection<Phone>> GetAll()
+        public async Task<ICollection<Phone>> GetAll(Guid clientId)
         {
             var result = await _phone
                 .AsNoTracking()
+                .Where(p => p.ClientId == clientId)
                 .ToListAsync();
             return result;
         }
@@ -48,6 +49,13 @@ namespace PB.Infra.Data.Repositories
             return await _phone
                 .AsNoTracking()
                 .SingleOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<Phone> GetByClientId(Guid clientId)
+        {
+            return await _phone
+                .AsNoTracking()
+                .SingleOrDefaultAsync(p => p.ClientId == clientId);
         }
     }
 }

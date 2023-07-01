@@ -10,8 +10,10 @@ namespace PB.Domain.Repositories
 
         Task Delete(Phone phone);
 
-        Task<ICollection<Phone>> GetAll();
+        Task<ICollection<Phone>> GetAll(Guid clientId);
 
         Task<Phone> Get(Guid id);
+
+        Task<Phone> GetByClientId(Guid clientId);
     }
 }

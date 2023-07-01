@@ -19,12 +19,12 @@ namespace PB.Domain.Commands.PhoneCommands.Requests
         public Guid ClientId { get; set; }
 
         [Required]
-        public string Ddd { get; private set; }
+        public string Ddd { get; set; }
 
         [Required]
-        public string PhoneNumber { get; private set; }
+        public string PhoneNumber { get; set; }
 
         [Required]
-        public EPhoneType PhoneType { get; private set; }
+        public EPhoneType PhoneType { get; set; }
     }
 }
