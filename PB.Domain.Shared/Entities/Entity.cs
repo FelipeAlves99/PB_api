@@ -6,10 +6,10 @@ namespace PB.Domain.Shared.Entities
     public abstract class Entity<T> : AbstractValidator<T>
         where T : Entity<T>
     {
-        protected Entity(Guid id, bool isDeleted)
+        protected Entity()
         {
-            Id = id;
-            IsDeleted = isDeleted;
+            Id = Guid.NewGuid();
+            IsDeleted = false;
             CreatedOn = DateTime.Now;
             UpdatedOn = DateTime.Now;
             ValidationResult = new();

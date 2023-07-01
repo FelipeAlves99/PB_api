@@ -1,10 +1,8 @@
-﻿using MediatR;
-using Newtonsoft.Json;
-using PB.Domain.Shared.Commands;
+﻿using Newtonsoft.Json;
 
 namespace PB.Domain.Shared.Notifications
 {
-    public class DomainNotification : INotification, ICommandResultData
+    public class DomainNotification : IDomainNotification
     {
         public DomainNotification(string key, string value)
         {

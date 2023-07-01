@@ -6,19 +6,15 @@
         protected CommandResult()
         { }
 
-        public CommandResult(string message, string success)
+        public CommandResult(string message, bool success, T data)
         {
             Message = message;
             Success = success;
-        }
-
-        public CommandResult(string message, string success, T data) : this(message, success)
-        {
             Data = data;
         }
 
-        public string? Message { get; set; }
-        public string? Success { get; set; }
-        public T? Data { get; set; }
+        public string Message { get; set; }
+        public bool Success { get; set; }
+        public T Data { get; set; }
     }
 }
