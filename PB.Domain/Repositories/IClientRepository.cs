@@ -15,5 +15,7 @@ namespace PB.Domain.Repositories
         Task<Client> Get(Guid id);
 
         Task<Client> GetByEmail(string email);
+
+        Task<Client> GetByPhoneNumber(string ddd, string phoneNumber);
     }
 }

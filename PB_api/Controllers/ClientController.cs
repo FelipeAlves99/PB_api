@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using PB.Domain.Commands.ClientCommands.Requests;
 using PB.Domain.Commands.ClientCommands.Responses;
 using PB.Domain.Commands.PhoneCommands.Requests;
+using PB.Domain.Queries.ClientQueries;
+using PB.Domain.Queries.PhoneQueries;
+using PB.Domain.Repositories;
 using PB.Domain.Shared.Commands;
 using PB.Domain.Shared.Handlers;
 using PB.Domain.Shared.Notifications;
@@ -71,47 +74,41 @@ namespace PB.Api.Controllers
             return NoContent();
         }
 
-        //[HttpGet("{clientId}")]
-        //public async Task<IActionResult> GetClient([FromRoute] Guid clientId)
-        //{
-        //    var result = await _handler.SendCommand(new GetClientQueryRequest(clientId));
+        [HttpGet("{clientId}")]
+        public async Task<IActionResult> GetClient([FromRoute] Guid clientId, [FromServices] IClientRepository repository)
+        {
+            var client = await repository.Get(clientId);
 
-        //    //if (result is null)
-        //    //    return BadRequest();
+            if (client is null)
+                return BadRequest(new CommandResult<ICollection<DomainNotification>>("Client doesn't exists", false, _notificationHandler.GetNotifications()));
 
-        //    if (result.Success is false)
-        //        return BadRequest(result);
+            var phones = new List<GetPhoneQuery>();
 
-        //    //foreach (var phone in request.Phones)
-        //    //    await _handler.SendCommand(new CreatePhoneCommandRequest(commandResult.Data.Id, phone.Ddd, phone.PhoneNumber, phone.PhoneType));
+            foreach (var phone in client.Phones)
+                phones.Add(new GetPhoneQuery(phone.Id, phone.Ddd, phone.PhoneNumber, phone.PhoneType, phone.ClientId));
 
-        //    //if (await CommitAsync() is false)
-        //    //    return BadRequest(new CommandResult<ICollection<DomainNotification>>("Failed to register the client", false, _notificationHandler.GetNotifications()));
+            var result = new GetClientQuery(client.Id, client.FullName, client.Email, phones);
 
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetByPhone([FromBody] CreateClientCommandRequest request)
-        //{
-        //    var result = await _handler.SendCommand(request);
+        [HttpGet()]
+        public async Task<IActionResult> GetByPhone([FromQuery] string ddd, [FromQuery] string phoneNumber, [FromServices] IClientRepository repository)
+        {
+            var client = await repository.GetByPhoneNumber(ddd, phoneNumber);
 
-        //    if (result.Success is false)
-        //        return BadRequest(result);
+            if (client is null)
+                return BadRequest(new CommandResult<ICollection<DomainNotification>>("Client doesn't exists", false, _notificationHandler.GetNotifications()));
 
-        //    //var commandResult = result as CommandResult<CreateClientCommandResponse>;
+            var phones = new List<GetPhoneQuery>();
 
-        //    //if (commandResult is null || commandResult.Success is false)
-        //    //    return BadRequest(result);
+            foreach (var phone in client.Phones)
+                phones.Add(new GetPhoneQuery(phone.Id, phone.Ddd, phone.PhoneNumber, phone.PhoneType, phone.ClientId));
 
-        //    //foreach (var phone in request.Phones)
-        //    //    await _handler.SendCommand(new CreatePhoneCommandRequest(commandResult.Data.Id, phone.Ddd, phone.PhoneNumber, phone.PhoneType));
+            var result = new GetClientQuery(client.Id, client.FullName, client.Email, phones);
 
-        //    //if (await CommitAsync() is false)
-        //    //    return BadRequest(new CommandResult<ICollection<DomainNotification>>("Failed to register the client", false, _notificationHandler.GetNotifications()));
-
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
 
         private async Task<bool> CommitAsync()
         {

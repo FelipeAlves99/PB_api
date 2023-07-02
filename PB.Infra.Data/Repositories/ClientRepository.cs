@@ -60,5 +60,14 @@ namespace PB.Infra.Data.Repositories
                 .Include(x => x.Phones)
                 .SingleOrDefaultAsync(c => c.Email == email);
         }
+
+        public async Task<Client> GetByPhoneNumber(string ddd, string phoneNumber)
+        {
+            return await _client
+                .AsNoTracking()
+                .Include(x => x.Phones
+                    .Where(p => p.Ddd == ddd && p.PhoneNumber == phoneNumber))
+                .FirstOrDefaultAsync();
+        }
     }
 }
