@@ -47,7 +47,7 @@ namespace PB.Domain.Entities
         private void ValidatePhoneNumber()
         {
             RuleFor(p => p.PhoneNumber)
-                .NotNull().WithMessage("You must inform your phone number");
+                .NotEmpty().WithMessage("You must inform your phone number");
         }
 
         private void ValidateDDD()
